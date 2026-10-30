@@ -1,6 +1,6 @@
 # Beeldtools
 
-Webapp met drie tools voor e-mail- en webafbeeldingen. Alles draait in de browser: afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld.
+Webapp met vier tools voor e-mail- en webafbeeldingen. Alles draait in de browser: afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld.
 
 ## Video thumbnail
 
@@ -29,6 +29,15 @@ Webapp met drie tools voor e-mail- en webafbeeldingen. Alles draait in de browse
 - Foto's vullen de vakken op volgorde; een leeg vak aanklikken om het te vullen, later aanvullen kan altijd
 - Per foto verslepen en zoomen; volgorde wijzigen door de voorbeelden te verslepen
 - Download als JPG of PNG (transparant altijd PNG) zodra alle vakken gevuld zijn
+
+## Diashow
+
+- 2 tot 6 afbeeldingen worden een geanimeerde GIF die steeds wisselt, voor e-mail
+- Formaat 648 × 365 of 648 × 450; per afbeelding verslepen en zoomen; volgorde wijzigen door te slepen
+- Snelheid: traag (2,5 s), normaal (1,5 s) of iets sneller (1 s) per beeld
+- Overgang: geen, vervagen of schuiven (kort, ongeveer 0,2 s)
+- Elk beeld krijgt een eigen kleurenpalet voor betere fotokwaliteit
+- Boven 1 MB volgt een waarschuwing, met een knop "Kleiner maken" (minder tussenbeelden en kleuren)
 
 ## Privacy
 

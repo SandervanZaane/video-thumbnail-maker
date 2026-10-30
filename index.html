@@ -21,6 +21,7 @@
         <button type="button" role="tab" id="tab-thumbnail" aria-controls="panel-thumbnail" data-tab="thumbnail">Video thumbnail</button>
         <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Bijsnijden</button>
         <button type="button" role="tab" id="tab-gallery" aria-controls="panel-gallery" data-tab="galerij">Galerij</button>
+        <button type="button" role="tab" id="tab-slides" aria-controls="panel-slides" data-tab="diashow">Diashow</button>
       </nav>
     </div>
   </header>
@@ -278,6 +279,89 @@
         </aside>
       </div>
     </section>
+
+    <!-- Tab 4: diashow (GIF) -->
+    <section id="panel-slides" role="tabpanel" aria-labelledby="tab-slides" hidden>
+      <div id="slide-dropzone" class="card dropzone">
+        <input id="slide-files" type="file" accept="image/*" multiple hidden>
+        <p class="drop-title">Sleep 2 tot 6 afbeeldingen hierheen</p>
+        <p class="hint">of <label for="slide-files" class="link">kies bestanden</label> · ze wisselen elkaar af in een GIF · plakken werkt ook</p>
+      </div>
+
+      <div id="slide-workspace" class="workspace" hidden>
+        <div>
+          <div class="stage card">
+            <canvas id="slide-canvas" class="draggable" aria-label="Geselecteerde afbeelding; sleep om de uitsnede te verplaatsen"></canvas>
+            <div class="stage-bar">
+              <label class="field zoom">
+                <span class="field-head">Zoom <output id="slide-zoom-value">100%</output></span>
+                <input id="slide-zoom" type="range" min="100" max="400" value="100">
+              </label>
+              <button type="button" class="secondary small" id="slide-reset">Centreren</button>
+            </div>
+            <p class="hint" id="slide-info"></p>
+            <ul id="slide-list" class="thumbs" aria-label="Volgorde van de afbeeldingen"></ul>
+            <p class="hint">Sleep de voorbeelden om de volgorde te wijzigen. Zet je sterkste beeld vooraan: Outlook op Windows toont alleen het eerste.</p>
+          </div>
+
+          <div class="card result" id="slide-result-card" hidden>
+            <h2>Resultaat</h2>
+            <img id="slide-result" alt="Voorbeeld van de geanimeerde GIF">
+            <p class="hint" id="slide-result-info"></p>
+            <p class="warning" id="slide-warning" hidden></p>
+            <div class="actions">
+              <button id="slide-smaller" type="button" class="secondary">Kleiner maken</button>
+              <button id="slide-download" type="button" class="primary">Download GIF</button>
+            </div>
+            <button id="slide-best" type="button" class="link danger" hidden>Terug naar beste kwaliteit</button>
+          </div>
+        </div>
+
+        <aside class="panel card">
+          <section class="group">
+            <h2>Formaat</h2>
+            <select name="slide-size" aria-label="Formaat">
+              <option value="648x365" selected>648 × 365 — 16:9</option>
+              <option value="648x450">648 × 450 — Hoger</option>
+            </select>
+          </section>
+
+          <section class="group">
+            <h2>Snelheid</h2>
+            <div class="options cols-3" role="radiogroup" aria-label="Snelheid">
+              <label class="option"><input type="radio" name="slide-speed" value="slow"><span>Traag</span></label>
+              <label class="option"><input type="radio" name="slide-speed" value="normal" checked><span>Normaal</span></label>
+              <label class="option"><input type="radio" name="slide-speed" value="fast"><span>Iets sneller</span></label>
+            </div>
+            <p class="hint" id="slide-speed-info"></p>
+          </section>
+
+          <section class="group">
+            <h2>Overgang</h2>
+            <div class="options cols-3" role="radiogroup" aria-label="Overgang">
+              <label class="option"><input type="radio" name="slide-transition" value="none" checked><span>Geen</span></label>
+              <label class="option"><input type="radio" name="slide-transition" value="fade"><span>Vervagen</span></label>
+              <label class="option"><input type="radio" name="slide-transition" value="slide"><span>Schuiven</span></label>
+            </div>
+          </section>
+
+          <section class="group">
+            <h2>Bestand</h2>
+            <label class="field">
+              <span class="field-head">Bestandsnaam</span>
+              <input id="slide-filename" type="text" value="Diashow_" spellcheck="false">
+            </label>
+            <p class="hint" id="slide-filename-info"></p>
+          </section>
+
+          <div class="actions single">
+            <button id="slide-make" type="button" class="primary">GIF maken</button>
+          </div>
+          <button id="slide-clear" type="button" class="link danger">Alles wissen</button>
+          <p class="status" id="slide-status" role="status"></p>
+        </aside>
+      </div>
+    </section>
   </main>
 
   <footer class="privacy">
@@ -291,5 +375,6 @@
   <script src="js/thumbnail.js"></script>
   <script src="js/cropper.js"></script>
   <script src="js/gallery.js"></script>
+  <script src="js/slideshow.js"></script>
 </body>
 </html>

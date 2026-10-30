@@ -3,6 +3,8 @@
 // lichte, vaste dithering, zodat stilstaande delen tussen frames niet flikkeren.
 // Frames na het eerste mogen een deelgebied zijn; pixels die niet veranderen
 // worden transparant opgeslagen, wat het bestand flink kleiner maakt.
+// Voor diashows met verschillende foto's is er encodeSlides: elk frame krijgt
+// dan een eigen palet, zodat elke foto zijn eigen kleuren houdt.
 (() => {
   const TRANSPARENT = 255;
   const MAX_COLORS = 255;
@@ -62,9 +64,9 @@
     return { start, end, range: ranges[0][0], shift: ranges[0][1] };
   }
 
-  function buildPalette(colors) {
+  function buildPalette(colors, maxColors = MAX_COLORS) {
     const boxes = [makeBox(colors, 0, colors.length)];
-    while (boxes.length < MAX_COLORS) {
+    while (boxes.length < maxColors) {
       let best = -1;
       let bestScore = 0;
       boxes.forEach((box, i) => {
@@ -133,14 +135,14 @@
 
   const clamp = (v) => (v < 0 ? 0 : v > 255 ? 255 : v);
 
-  function indexFrame(frame, map) {
+  function indexFrame(frame, map, dither = DITHER_STRENGTH) {
     const out = new Uint8Array(frame.w * frame.h);
     const d = frame.data;
     for (let y = 0; y < frame.h; y++) {
       const by = ((y + frame.y) & 3) * 4;
       for (let x = 0; x < frame.w; x++) {
         // Dithering op basis van de absolute positie: overal in elk frame gelijk.
-        const offset = (BAYER_4X4[by + ((x + frame.x) & 3)] / 16 - 0.5) * DITHER_STRENGTH;
+        const offset = (BAYER_4X4[by + ((x + frame.x) & 3)] / 16 - 0.5) * dither;
         const o = (y * frame.w + x) * 4;
         out[y * frame.w + x] = map(clamp(d[o] + offset), clamp(d[o + 1] + offset), clamp(d[o + 2] + offset));
       }
@@ -269,5 +271,46 @@
     return w.result();
   }
 
-  window.GifEncoder = { encode };
+  // Diashow: alle frames zijn volledige beelden, elk met een eigen palet.
+  // options: { maxColors (2–256), dither (0 = uit) }; een frame kan beide
+  // overschrijven met frame.colors en frame.dither.
+  async function encodeSlides(width, height, frames, onProgress, { maxColors = 256, dither = DITHER_STRENGTH } = {}) {
+    const w = new ByteWriter();
+    w.ascii('GIF89a');
+    w.u16(width);
+    w.u16(height);
+    w.byte(0x70); // geen globaal palet
+    w.byte(0);
+    w.byte(0);
+    w.byte(0x21); w.byte(0xff); w.byte(11);
+    w.ascii('NETSCAPE2.0');
+    w.byte(3); w.byte(1); w.u16(0); w.byte(0);
+
+    for (let n = 0; n < frames.length; n++) {
+      const frame = frames[n];
+      const palette = buildPalette(collectSamples([frame]), frame.colors ?? maxColors);
+      // Kleinere paletten krijgen een kleinere tabel en kortere codes.
+      const bits = Math.max(2, Math.ceil(Math.log2(palette.length)));
+      const indices = indexFrame(frame, makeMapper(palette), frame.dither ?? dither);
+
+      w.byte(0x21); w.byte(0xf9); w.byte(4);
+      w.byte(1 << 2);
+      w.u16(frame.delay);
+      w.byte(0);
+      w.byte(0);
+
+      w.byte(0x2c);
+      w.u16(0); w.u16(0); w.u16(width); w.u16(height);
+      w.byte(0x80 | (bits - 1)); // lokaal palet
+      for (let i = 0; i < 1 << bits; i++) w.bytes(palette[i] || [0, 0, 0]);
+      writeLzw(w, indices, bits);
+
+      if (onProgress) onProgress(n + 1, frames.length);
+      await window.Beeld.nextTick();
+    }
+    w.byte(0x3b);
+    return w.result();
+  }
+
+  window.GifEncoder = { encode, encodeSlides };
 })();
