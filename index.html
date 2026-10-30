@@ -3,85 +3,180 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Video Thumbnail Maker</title>
+  <!-- Privacy: de browser mag alleen bestanden van deze site laden en nergens
+       gegevens naartoe sturen (connect-src 'none'). Alleen thumbnails van
+       i.ytimg.com mogen als afbeelding worden geladen. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: https://i.ytimg.com; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Beeldtools</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <span class="brand">Beeldtools</span>
+      <nav class="tabs" role="tablist" aria-label="Tools">
+        <button type="button" role="tab" id="tab-thumbnail" aria-controls="panel-thumbnail" data-tab="thumbnail">Video thumbnail</button>
+        <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Afbeeldingen bijsnijden</button>
+      </nav>
+    </div>
+  </header>
+
   <main>
-    <header>
-      <h1>Video Thumbnail Maker</h1>
-      <p class="sub">Plak een videolink, kies een play-knop en formaat, en download de afbeelding.</p>
-    </header>
-
-    <form id="url-form" class="card">
-      <label for="url">Videolink of video-ID</label>
-      <div class="row">
-        <input id="url" type="text" placeholder="Plak hier de link naar de video" autocomplete="off" required>
-        <button type="submit">Ophalen</button>
-      </div>
-      <p id="status" class="status" role="status"></p>
-    </form>
-
-    <section id="editor" class="card" hidden>
-      <div class="preview">
-        <canvas id="canvas" width="1280" height="720"></canvas>
-      </div>
-
-      <div class="controls">
-        <fieldset>
-          <legend>Play-knop</legend>
-          <div class="chips" id="button-style">
-            <label><input type="radio" name="style" value="red" checked> Rood</label>
-            <label><input type="radio" name="style" value="circle"> Rond wit</label>
-            <label><input type="radio" name="style" value="custom"> Rond eigen kleuren</label>
-            <label><input type="radio" name="style" value="dark"> Rond donker</label>
-            <label><input type="radio" name="style" value="none"> Geen</label>
-          </div>
-          <div class="colors" id="color-wrap" hidden>
-            <label>Cirkel <input id="color-circle" type="color" value="#ffffff"></label>
-            <label>Driehoek <input id="color-triangle" type="color" value="#18181b"></label>
-          </div>
-          <label class="slider">Grootte <input id="button-size" type="range" min="8" max="40" value="20"> <span id="button-size-value">20%</span></label>
-          <label class="check"><input id="darken" type="checkbox"> Afbeelding iets donkerder maken</label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Formaat</legend>
-          <div class="chips" id="sizes">
-            <label><input type="radio" name="size" value="1280x720" checked> 1280 × 720</label>
-            <label><input type="radio" name="size" value="648xauto"> 648 × automatisch</label>
-            <label><input type="radio" name="size" value="648x250"> 648 × 250</label>
-            <label><input type="radio" name="size" value="480x270"> 480 × 270</label>
-            <label><input type="radio" name="size" value="320x180"> 320 × 180</label>
-            <label><input type="radio" name="size" value="custom"> Eigen formaat</label>
-          </div>
-          <div class="custom" id="custom-wrap" hidden>
-            <label>Breedte <input id="custom-width" type="number" min="50" max="3840" value="800"></label>
-            <label>Hoogte <input id="custom-height" type="number" min="50" max="3840" placeholder="auto"></label>
-            <span class="hint">px — laat hoogte leeg voor automatisch</span>
-          </div>
-          <p class="hint" id="size-info"></p>
-          <label class="slider" id="crop-wrap" hidden><span id="crop-label">Uitsnede</span> <input id="crop-pos" type="range" min="0" max="100" value="50"></label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Bestand</legend>
-          <div class="chips">
-            <label><input type="radio" name="type" value="image/png" checked> PNG</label>
-            <label><input type="radio" name="type" value="image/jpeg"> JPG</label>
-            <label><input type="radio" name="type" value="image/webp"> WebP</label>
-          </div>
-          <label class="filename">Bestandsnaam <input id="filename" type="text" value="Video_thumbnail_" spellcheck="false"></label>
-          <p class="hint" id="filename-info"></p>
-        </fieldset>
-
-        <div class="actions">
-          <button id="download" type="button">Download</button>
-          <button id="download-all" type="button" class="secondary">Alle vaste maten downloaden</button>
+    <!-- Tab 1: video thumbnail -->
+    <section id="panel-thumbnail" role="tabpanel" aria-labelledby="tab-thumbnail">
+      <form id="url-form" class="card source">
+        <label for="url" class="label">Videolink of video-ID</label>
+        <div class="row">
+          <input id="url" type="text" placeholder="Plak hier de link naar de video" autocomplete="off" spellcheck="false" required>
+          <button type="submit" class="primary">Ophalen</button>
         </div>
+        <p class="hint">Of <label for="thumb-upload" class="link">upload zelf een afbeelding</label> — dan wordt er niets opgehaald van buiten.</p>
+        <input id="thumb-upload" type="file" accept="image/*" hidden>
+        <p id="status" class="status" role="status"></p>
+      </form>
+
+      <div id="editor" class="workspace" hidden>
+        <div class="stage card">
+          <canvas id="canvas" width="1280" height="720"></canvas>
+          <p class="hint" id="size-info"></p>
+        </div>
+
+        <aside class="panel card">
+          <section class="group">
+            <h2>Play-knop</h2>
+            <div class="options cols-2" role="radiogroup" aria-label="Stijl play-knop">
+              <label class="option"><input type="radio" name="style" value="red" checked><span>Rood</span></label>
+              <label class="option"><input type="radio" name="style" value="white"><span>Wit</span></label>
+              <label class="option"><input type="radio" name="style" value="dark"><span>Donker</span></label>
+              <label class="option"><input type="radio" name="style" value="custom"><span>Eigen kleuren</span></label>
+            </div>
+            <div class="colors" id="color-wrap" hidden>
+              <label>Cirkel <input id="color-circle" type="color" value="#ffffff"></label>
+              <label>Driehoek <input id="color-triangle" type="color" value="#18181b"></label>
+            </div>
+            <label class="field">
+              <span class="field-head">Grootte <output id="button-size-value">20%</output></span>
+              <input id="button-size" type="range" min="10" max="35" value="20">
+            </label>
+            <label class="check"><input id="darken" type="checkbox"> Afbeelding iets donkerder</label>
+          </section>
+
+          <section class="group">
+            <h2>Formaat</h2>
+            <div class="options" role="radiogroup" aria-label="Formaat">
+              <label class="option"><input type="radio" name="size" value="1280x720" checked><span>1280 × 720<small>Groot, 16:9</small></span></label>
+              <label class="option"><input type="radio" name="size" value="648xauto"><span>648 × 365<small>E-mailbreedte, 16:9</small></span></label>
+              <label class="option"><input type="radio" name="size" value="648x250"><span>648 × 250<small>E-mailbanner</small></span></label>
+              <label class="option"><input type="radio" name="size" value="custom"><span>Eigen formaat</span></label>
+            </div>
+            <div class="inline-fields" id="custom-wrap" hidden>
+              <label>Breedte <input id="custom-width" type="number" min="50" max="3840" value="800"></label>
+              <label>Hoogte <input id="custom-height" type="number" min="50" max="3840" placeholder="auto"></label>
+            </div>
+            <label class="field" id="crop-wrap" hidden>
+              <span class="field-head" id="crop-label">Uitsnede</span>
+              <input id="crop-pos" type="range" min="0" max="100" value="50">
+            </label>
+          </section>
+
+          <section class="group">
+            <h2>Bestand</h2>
+            <div class="options cols-3" role="radiogroup" aria-label="Bestandstype">
+              <label class="option"><input type="radio" name="type" value="image/png" checked><span>PNG</span></label>
+              <label class="option"><input type="radio" name="type" value="image/jpeg"><span>JPG</span></label>
+              <label class="option"><input type="radio" name="type" value="image/gif"><span>GIF</span></label>
+            </div>
+            <p class="hint" id="gif-hint" hidden>Geanimeerd: een rustige ring rond de play-knop. Programma's zonder animatie (zoals Outlook op Windows) tonen het eerste beeld, zonder ring.</p>
+            <label class="field">
+              <span class="field-head">Bestandsnaam</span>
+              <input id="filename" type="text" value="Video_thumbnail_" spellcheck="false">
+            </label>
+            <p class="hint" id="filename-info"></p>
+          </section>
+
+          <div class="actions">
+            <button id="download" type="button" class="primary">Download</button>
+            <button id="download-all" type="button" class="secondary">Alle maten</button>
+          </div>
+          <p class="status" id="export-status" role="status"></p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Tab 2: afbeeldingen bijsnijden -->
+    <section id="panel-crop" role="tabpanel" aria-labelledby="tab-crop" hidden>
+      <div id="dropzone" class="card dropzone">
+        <input id="crop-files" type="file" accept="image/*" multiple hidden>
+        <p class="drop-title">Sleep afbeeldingen hierheen</p>
+        <p class="hint">of <label for="crop-files" class="link">kies bestanden</label> · plakken (Ctrl+V / ⌘V) werkt ook</p>
+      </div>
+
+      <div id="crop-workspace" class="workspace" hidden>
+        <div class="stage card">
+          <canvas id="crop-canvas" class="draggable" aria-label="Uitsnede; sleep om te verplaatsen"></canvas>
+          <div class="stage-bar">
+            <label class="field zoom">
+              <span class="field-head">Zoom <output id="crop-zoom-value">100%</output></span>
+              <input id="crop-zoom" type="range" min="100" max="400" value="100">
+            </label>
+            <button type="button" class="secondary small" id="crop-reset">Centreren</button>
+          </div>
+          <p class="hint" id="crop-info"></p>
+          <ul id="crop-list" class="thumbs" aria-label="Geüploade afbeeldingen"></ul>
+        </div>
+
+        <aside class="panel card">
+          <section class="group">
+            <h2>Formaat</h2>
+            <div class="options" role="radiogroup" aria-label="Formaat">
+              <label class="option"><input type="radio" name="crop-size" value="720x405" checked><span>720 × 405<small>Breed, 16:9</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="720x300"><span>720 × 300<small>Header</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="648x365"><span>648 × 365<small>E-mailbreedte, 16:9</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="648x250"><span>648 × 250<small>E-mailbanner</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="648x648"><span>648 × 648<small>Vierkant</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="324x324"><span>324 × 324<small>Halve kolom, vierkant</small></span></label>
+              <label class="option"><input type="radio" name="crop-size" value="custom"><span>Eigen formaat<small>Max. 720 breed</small></span></label>
+            </div>
+            <div class="inline-fields" id="crop-custom-wrap" hidden>
+              <label>Breedte <input id="crop-custom-width" type="number" min="50" max="720" value="648"></label>
+              <label>Hoogte <input id="crop-custom-height" type="number" min="50" max="2000" value="400"></label>
+            </div>
+          </section>
+
+          <section class="group">
+            <h2>Bestand</h2>
+            <div class="options cols-2" role="radiogroup" aria-label="Bestandstype">
+              <label class="option"><input type="radio" name="crop-type" value="image/jpeg" checked><span>JPG</span></label>
+              <label class="option"><input type="radio" name="crop-type" value="image/png"><span>PNG</span></label>
+            </div>
+            <label class="field" id="crop-quality-wrap">
+              <span class="field-head">Kwaliteit <output id="crop-quality-value">85%</output></span>
+              <input id="crop-quality" type="range" min="50" max="100" value="85">
+            </label>
+            <p class="hint" id="crop-filesize"></p>
+          </section>
+
+          <div class="actions">
+            <button id="crop-download" type="button" class="primary">Download</button>
+            <button id="crop-download-all" type="button" class="secondary">Alles als ZIP</button>
+          </div>
+          <button id="crop-clear" type="button" class="link danger">Alles wissen</button>
+          <p class="status" id="crop-status" role="status"></p>
+        </aside>
       </div>
     </section>
   </main>
-  <script src="app.js"></script>
+
+  <footer class="privacy">
+    <p><strong>Privé:</strong> alles gebeurt in je eigen browser. Afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld. Sluit je dit tabblad, dan zijn ze weg. Ook de metadata van je foto's (zoals locatie) gaat er bij het opslaan uit.</p>
+  </footer>
+
+  <script src="js/shared.js"></script>
+  <script src="js/gif-encoder.js"></script>
+  <script src="js/zip.js"></script>
+  <script src="js/tabs.js"></script>
+  <script src="js/thumbnail.js"></script>
+  <script src="js/cropper.js"></script>
 </body>
 </html>
