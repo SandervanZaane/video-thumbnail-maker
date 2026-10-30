@@ -24,8 +24,16 @@
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   const selected = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
   const currentItem = () => state.items.find((item) => item.id === state.current);
+  const isRound = () => selected('crop-shape') === 'round';
+  // Rond heeft een transparante achtergrond nodig, dus altijd PNG.
+  const outputType = () => (isRound() ? 'image/png' : selected('crop-type'));
 
   function currentSize() {
+    if (isRound()) {
+      const size = selected('crop-round-size');
+      const d = size === 'custom' ? clamp(Math.round(Number($('#crop-round-custom').value) || 250), 50, MAX_WIDTH) : Number(size);
+      return { width: d, height: d };
+    }
     const size = selected('crop-size');
     if (size === 'custom') {
       return {
@@ -69,20 +77,28 @@
       ctx.fillRect(0, 0, width, height);
     }
     const r = cropRect(item, width, height);
+    ctx.save();
+    if (isRound()) {
+      // Alles buiten de cirkel blijft transparant.
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, Math.PI * 2);
+      ctx.clip();
+    }
     ctx.drawImage(item.img, r.x, r.y, r.w, r.h, 0, 0, width, height);
+    ctx.restore();
     return canvas;
   }
 
   function fileName(item, { width, height }) {
     const base = sanitizeName(item.name.replace(/\.[^.]+$/, '')) || 'afbeelding';
-    return `${base}_${width}x${height}.${extension(selected('crop-type'))}`;
+    return `${base}_${isRound() ? 'rond_' : ''}${width}x${height}.${extension(outputType())}`;
   }
 
   // --- Weergave ---
 
   function renderThumb(item) {
     const { width, height } = currentSize();
-    draw(item, item.thumb, THUMB_WIDTH, Math.round((THUMB_WIDTH * height) / width), selected('crop-type'));
+    draw(item, item.thumb, THUMB_WIDTH, Math.round((THUMB_WIDTH * height) / width), outputType());
   }
 
   function renderList() {
@@ -114,7 +130,7 @@
     const item = currentItem();
     if (!item) return;
     const size = currentSize();
-    const type = selected('crop-type');
+    const type = outputType();
     draw(item, stage, size.width, size.height, type);
     renderThumb(item);
 
@@ -133,15 +149,23 @@
     state.sizeTimer = setTimeout(async () => {
       const item = currentItem();
       if (!item) return;
-      const type = selected('crop-type');
+      const type = outputType();
       const blob = await canvasToBlob(stage, type, Number(qualitySlider.value) / 100);
       $('#crop-filesize').textContent = `Bestandsgrootte: ca. ${formatBytes(blob.size)}`;
     }, 250);
   }
 
   function updateSettings() {
+    const round = isRound();
+    $('#crop-rect-sizes').hidden = round;
+    $('#crop-round-sizes').hidden = !round;
+    $('#crop-type-options').hidden = round;
     $('#crop-custom-wrap').hidden = selected('crop-size') !== 'custom';
-    $('#crop-quality-wrap').hidden = selected('crop-type') !== 'image/jpeg';
+    $('#crop-round-custom-wrap').hidden = selected('crop-round-size') !== 'custom';
+    $('#crop-quality-wrap').hidden = outputType() !== 'image/jpeg';
+    // Ruitjespatroon achter het voorbeeld maakt de transparantie zichtbaar.
+    stage.classList.toggle('transparent', round);
+    list.classList.toggle('transparent', round);
     $('#crop-quality-value').textContent = `${qualitySlider.value}%`;
     $('#crop-download-all').hidden = state.items.length < 2;
     state.items.forEach(renderThumb);
@@ -223,7 +247,7 @@
 
   async function exportBlob(item) {
     const size = currentSize();
-    const type = selected('crop-type');
+    const type = outputType();
     const canvas = draw(item, document.createElement('canvas'), size.width, size.height, type);
     return { blob: await canvasToBlob(canvas, type, Number(qualitySlider.value) / 100), name: fileName(item, size) };
   }
@@ -261,7 +285,7 @@
     }
     const { width, height } = currentSize();
     const zip = window.makeZip(files);
-    const zipName = `afbeeldingen_${width}x${height}.zip`;
+    const zipName = `afbeeldingen_${isRound() ? 'rond_' : ''}${width}x${height}.zip`;
     saveBlob(zip, zipName);
     setStatus(`Gedownload: ${zipName} met ${files.length} afbeeldingen (${formatBytes(zip.size)})`);
   }
@@ -344,8 +368,8 @@
     if (files.length) addFiles(files);
   });
 
-  for (const id of ['#crop-custom-width', '#crop-custom-height', '#crop-quality']) $(id).addEventListener('input', updateSettings);
-  document.querySelectorAll('input[name="crop-size"], input[name="crop-type"]').forEach((input) => input.addEventListener('change', updateSettings));
+  for (const id of ['#crop-custom-width', '#crop-custom-height', '#crop-round-custom', '#crop-quality']) $(id).addEventListener('input', updateSettings);
+  document.querySelectorAll('input[name="crop-shape"], input[name="crop-size"], input[name="crop-round-size"], input[name="crop-type"]').forEach((input) => input.addEventListener('change', updateSettings));
   $('#crop-download').addEventListener('click', () => withBusy(downloadCurrent));
   $('#crop-download-all').addEventListener('click', () => withBusy(downloadZip));
   $('#crop-clear').addEventListener('click', clearAll);

@@ -128,6 +128,29 @@
 
         <aside class="panel card">
           <section class="group">
+            <h2>Vorm</h2>
+            <div class="options cols-2" role="radiogroup" aria-label="Vorm">
+              <label class="option"><input type="radio" name="crop-shape" value="rect" checked><span>Rechthoek</span></label>
+              <label class="option"><input type="radio" name="crop-shape" value="round"><span>Rond</span></label>
+            </div>
+          </section>
+
+          <section class="group" id="crop-round-sizes" hidden>
+            <h2>Formaat</h2>
+            <div class="options" role="radiogroup" aria-label="Formaat rond">
+              <label class="option"><input type="radio" name="crop-round-size" value="400"><span>400 × 400<small>Groot</small></span></label>
+              <label class="option"><input type="radio" name="crop-round-size" value="300"><span>300 × 300<small>Middel</small></span></label>
+              <label class="option"><input type="radio" name="crop-round-size" value="200" checked><span>200 × 200<small>Pasfoto in e-mail</small></span></label>
+              <label class="option"><input type="radio" name="crop-round-size" value="120"><span>120 × 120<small>Klein, bijvoorbeeld bij een quote</small></span></label>
+              <label class="option"><input type="radio" name="crop-round-size" value="custom"><span>Eigen formaat<small>Max. 720</small></span></label>
+            </div>
+            <div class="inline-fields" id="crop-round-custom-wrap" hidden>
+              <label>Doorsnede (px) <input id="crop-round-custom" type="number" min="50" max="720" value="250"></label>
+            </div>
+            <p class="hint">Wordt opgeslagen als PNG met een transparante achtergrond.</p>
+          </section>
+
+          <section class="group" id="crop-rect-sizes">
             <h2>Formaat</h2>
             <div class="options" role="radiogroup" aria-label="Formaat">
               <label class="option"><input type="radio" name="crop-size" value="720x405" checked><span>720 × 405<small>Breed, 16:9</small></span></label>
@@ -146,7 +169,7 @@
 
           <section class="group">
             <h2>Bestand</h2>
-            <div class="options cols-2" role="radiogroup" aria-label="Bestandstype">
+            <div class="options cols-2" role="radiogroup" aria-label="Bestandstype" id="crop-type-options">
               <label class="option"><input type="radio" name="crop-type" value="image/jpeg" checked><span>JPG</span></label>
               <label class="option"><input type="radio" name="crop-type" value="image/png"><span>PNG</span></label>
             </div>

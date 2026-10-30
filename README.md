@@ -18,6 +18,7 @@ Webapp met twee tools voor e-mail- en webafbeeldingen. Alles draait in de browse
 - Per afbeelding de uitsnede verslepen en inzoomen; nooit pletten, nooit lege randen
 - Waarschuwing als een afbeelding moet worden vergroot (minder scherp)
 - JPG met instelbare kwaliteit en zichtbare bestandsgrootte, of PNG
+- Vorm **Rond** voor pasfoto's: 400×400, 300×300, 200×200, 120×120 of eigen doorsnede (max. 720), altijd als PNG met transparante achtergrond
 - Los downloaden of alles in één ZIP-bestand
 
 ## Privacy
