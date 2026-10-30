@@ -8,8 +8,10 @@ Webapp die de thumbnail van een video ophaalt, er een play-knop op plaatst en he
 - Pakt automatisch de hoogste beschikbare kwaliteit en snijdt zwarte balken weg
 - Play-knop in drie stijlen (rood, rond wit, rond donker) of zonder knop, met instelbare grootte
 - Optie om de afbeelding iets donkerder te maken zodat de knop beter opvalt
-- Vier vaste maten (1280×720, 640×360, 480×270, 320×180) of een eigen breedte (16:9)
-- Download als PNG, JPG of WebP, los of alle vier de maten in één keer
+- Vaste maten: 1280×720, 640×360, 480×270, 320×180, 648×250 en 648×automatisch (648×365)
+- Eigen formaat: vul een breedte in, en optioneel een hoogte (leeg = automatisch 16:9)
+- De afbeelding wordt nooit geplet: wijkt de verhouding af van 16:9, dan wordt er bijgesneden. Met een schuifje kies je welk deel zichtbaar blijft.
+- Download als PNG, JPG of WebP, los of alle vaste maten in één keer
 
 ## Gebruik
 

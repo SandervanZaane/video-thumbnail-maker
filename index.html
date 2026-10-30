@@ -43,13 +43,21 @@
         <fieldset>
           <legend>Formaat</legend>
           <div class="chips" id="sizes">
-            <label><input type="radio" name="size" value="1280" checked> 1280 × 720</label>
-            <label><input type="radio" name="size" value="640"> 640 × 360</label>
-            <label><input type="radio" name="size" value="480"> 480 × 270</label>
-            <label><input type="radio" name="size" value="320"> 320 × 180</label>
-            <label><input type="radio" name="size" value="custom"> Eigen breedte</label>
+            <label><input type="radio" name="size" value="1280x720" checked> 1280 × 720</label>
+            <label><input type="radio" name="size" value="640x360"> 640 × 360</label>
+            <label><input type="radio" name="size" value="480x270"> 480 × 270</label>
+            <label><input type="radio" name="size" value="320x180"> 320 × 180</label>
+            <label><input type="radio" name="size" value="648x250"> 648 × 250</label>
+            <label><input type="radio" name="size" value="648xauto"> 648 × automatisch</label>
+            <label><input type="radio" name="size" value="custom"> Eigen formaat</label>
           </div>
-          <label class="custom" id="custom-wrap" hidden>Breedte (px) <input id="custom-width" type="number" min="50" max="3840" value="800"> <span id="custom-height"></span></label>
+          <div class="custom" id="custom-wrap" hidden>
+            <label>Breedte <input id="custom-width" type="number" min="50" max="3840" value="800"></label>
+            <label>Hoogte <input id="custom-height" type="number" min="50" max="3840" placeholder="auto"></label>
+            <span class="hint">px — laat hoogte leeg voor automatisch</span>
+          </div>
+          <p class="hint" id="size-info"></p>
+          <label class="slider" id="crop-wrap" hidden><span id="crop-label">Uitsnede</span> <input id="crop-pos" type="range" min="0" max="100" value="50"></label>
         </fieldset>
 
         <fieldset>
@@ -63,7 +71,7 @@
 
         <div class="actions">
           <button id="download" type="button">Download</button>
-          <button id="download-all" type="button" class="secondary">Alle 4 maten downloaden</button>
+          <button id="download-all" type="button" class="secondary">Alle vaste maten downloaden</button>
         </div>
       </div>
     </section>

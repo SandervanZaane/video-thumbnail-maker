@@ -2,7 +2,9 @@
 // play-knop overheen en laat je het resultaat downloaden in verschillende maten.
 
 const ASPECT = 9 / 16;
-const PRESET_WIDTHS = [1280, 640, 480, 320];
+// Breedte × hoogte; hoogte null = automatisch (16:9).
+const PRESETS = [[1280, 720], [640, 360], [480, 270], [320, 180], [648, 250], [648, null]];
+const PREVIEW_WIDTH = 1280;
 // Van hoogste naar laagste kwaliteit; maxres bestaat niet voor elke video.
 const QUALITIES = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault'];
 
@@ -16,6 +18,9 @@ const sizeSlider = $('#button-size');
 const darkenBox = $('#darken');
 const customWrap = $('#custom-wrap');
 const customWidth = $('#custom-width');
+const customHeight = $('#custom-height');
+const cropWrap = $('#crop-wrap');
+const cropPos = $('#crop-pos');
 
 const state = { image: null, videoId: null };
 
@@ -67,7 +72,8 @@ function drawPlayButton(ctx, w, h, style, sizePct) {
   if (style === 'none') return;
   const cx = w / 2;
   const cy = h / 2;
-  const bw = (w * sizePct) / 100;
+  // Bij brede, lage formaten (zoals 648 × 250) schaalt de knop mee met de hoogte.
+  const bw = (Math.min(w, h / ASPECT) * sizePct) / 100;
 
   ctx.save();
   ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
@@ -118,19 +124,35 @@ function selected(name) {
   return document.querySelector(`input[name="${name}"]:checked`).value;
 }
 
-// Tekent thumbnail + play-knop op het opgegeven canvas, uitgesneden naar 16:9.
-function render(target, width) {
-  const height = Math.round(width * ASPECT);
+// Bepaalt welk deel van de bron getoond wordt. De afbeelding wordt nooit
+// geplet: wijkt de verhouding af van 16:9, dan wordt er bijgesneden (zoals
+// CSS object-fit: cover). `pos` (0–1) schuift de uitsnede langs de bijgesneden as.
+function sourceRect(img, width, height, pos) {
+  // sddefault/hqdefault hebben zwarte balken (4:3); snij die altijd weg.
+  const baseW = img.naturalWidth;
+  const baseH = Math.min(img.naturalHeight, baseW * ASPECT);
+  const baseY = (img.naturalHeight - baseH) / 2;
+
+  const targetRatio = height / width;
+  if (targetRatio < ASPECT) {
+    // Lager dan 16:9: stuk van boven/onder af.
+    const h = baseW * targetRatio;
+    return { x: 0, y: baseY + (baseH - h) * pos, w: baseW, h };
+  }
+  // Hoger dan 16:9: stuk van links/rechts af.
+  const w = baseH / targetRatio;
+  return { x: (baseW - w) * pos, y: baseY, w, h: baseH };
+}
+
+// Tekent thumbnail + play-knop op het opgegeven canvas.
+function render(target, width, height) {
   target.width = width;
   target.height = height;
   const ctx = target.getContext('2d');
   ctx.imageSmoothingQuality = 'high';
 
-  const img = state.image;
-  // sddefault/hqdefault hebben zwarte balken (4:3); snij die weg.
-  const srcH = Math.min(img.naturalHeight, img.naturalWidth * ASPECT);
-  const srcY = (img.naturalHeight - srcH) / 2;
-  ctx.drawImage(img, 0, srcY, img.naturalWidth, srcH, 0, 0, width, height);
+  const src = sourceRect(state.image, width, height, Number(cropPos.value) / 100);
+  ctx.drawImage(state.image, src.x, src.y, src.w, src.h, 0, 0, width, height);
 
   if (darkenBox.checked) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
@@ -140,25 +162,44 @@ function render(target, width) {
   return target;
 }
 
-function currentWidth() {
+const clampPx = (value) => Math.min(3840, Math.max(50, Math.round(value)));
+const autoHeight = (width) => Math.round(width * ASPECT);
+
+function currentSize() {
   const size = selected('size');
-  if (size !== 'custom') return Number(size);
-  const w = Math.round(Number(customWidth.value));
-  return Math.min(3840, Math.max(50, w || 800));
+  let width;
+  let height;
+  if (size === 'custom') {
+    width = clampPx(Number(customWidth.value) || 800);
+    height = customHeight.value ? clampPx(Number(customHeight.value)) : null;
+  } else {
+    const [w, h] = size.split('x');
+    width = Number(w);
+    height = h === 'auto' ? null : Number(h);
+  }
+  return { width, height: height ?? autoHeight(width) };
 }
 
 function updatePreview() {
   $('#button-size-value').textContent = `${sizeSlider.value}%`;
-  const custom = selected('size') === 'custom';
-  customWrap.hidden = !custom;
-  if (custom) $('#custom-height').textContent = `× ${Math.round(currentWidth() * ASPECT)} px`;
-  if (state.image) render(canvas, 1280);
+  customWrap.hidden = selected('size') !== 'custom';
+
+  const { width, height } = currentSize();
+  const ratio = height / width;
+  const cropped = Math.abs(ratio - ASPECT) > 0.005;
+  cropWrap.hidden = !cropped;
+  $('#crop-label').textContent = ratio < ASPECT ? 'Uitsnede (boven ↔ onder)' : 'Uitsnede (links ↔ rechts)';
+  $('#size-info').textContent = `Resultaat: ${width} × ${height} px` +
+    (cropped ? ' — afbeelding wordt bijgesneden, niet geplet' : '');
+
+  // Voorbeeld in dezelfde verhouding als het eindresultaat.
+  if (state.image) render(canvas, PREVIEW_WIDTH, Math.round(PREVIEW_WIDTH * ratio));
 }
 
-function download(width) {
+function download({ width, height }) {
   const type = selected('type');
   const ext = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }[type];
-  const out = render(document.createElement('canvas'), width);
+  const out = render(document.createElement('canvas'), width, height);
   out.toBlob((blob) => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -193,8 +234,10 @@ form.addEventListener('submit', async (event) => {
 });
 
 editor.addEventListener('input', updatePreview);
-$('#download').addEventListener('click', () => download(currentWidth()));
+$('#download').addEventListener('click', () => download(currentSize()));
 $('#download-all').addEventListener('click', () => {
   // Kleine pauze tussen downloads, anders blokkeren sommige browsers ze.
-  PRESET_WIDTHS.forEach((w, i) => setTimeout(() => download(w), i * 300));
+  PRESETS.forEach(([width, height], i) => {
+    setTimeout(() => download({ width, height: height ?? autoHeight(width) }), i * 300);
+  });
 });

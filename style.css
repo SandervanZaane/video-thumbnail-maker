@@ -113,7 +113,10 @@ legend { font-weight: 700; margin-bottom: 8px; padding: 0; }
 }
 .slider input { flex: 1; max-width: 240px; accent-color: var(--accent); }
 .check input { accent-color: var(--accent); }
-.custom span, #button-size-value { color: var(--muted); }
+.custom { flex-wrap: wrap; }
+.custom label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.hint, #button-size-value { color: var(--muted); }
+p.hint { margin: 8px 0 0; font-size: 0.9rem; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
