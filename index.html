@@ -18,10 +18,10 @@
   <header class="topbar">
     <div class="topbar-inner">
       <nav class="tabs" role="tablist" aria-label="Tools">
-        <button type="button" role="tab" id="tab-thumbnail" aria-controls="panel-thumbnail" data-tab="thumbnail">Video thumbnail</button>
-        <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Bijsnijden</button>
+        <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Afbeeldingen bijsnijden</button>
         <button type="button" role="tab" id="tab-gallery" aria-controls="panel-gallery" data-tab="galerij">Galerij</button>
-        <button type="button" role="tab" id="tab-slides" aria-controls="panel-slides" data-tab="diashow">Diashow</button>
+        <button type="button" role="tab" id="tab-slides" aria-controls="panel-slides" data-tab="slideshow">Slideshow</button>
+        <button type="button" role="tab" id="tab-thumbnail" aria-controls="panel-thumbnail" data-tab="thumbnail">Video thumbnail</button>
       </nav>
     </div>
   </header>
@@ -280,7 +280,7 @@
       </div>
     </section>
 
-    <!-- Tab 4: diashow (GIF) -->
+    <!-- Slideshow (GIF) -->
     <section id="panel-slides" role="tabpanel" aria-labelledby="tab-slides" hidden>
       <div id="slide-dropzone" class="card dropzone">
         <input id="slide-files" type="file" accept="image/*" multiple hidden>
@@ -349,7 +349,7 @@
             <h2>Bestand</h2>
             <label class="field">
               <span class="field-head">Bestandsnaam</span>
-              <input id="slide-filename" type="text" value="Diashow_" spellcheck="false">
+              <input id="slide-filename" type="text" value="Slideshow_" spellcheck="false">
             </label>
             <p class="hint" id="slide-filename-info"></p>
           </section>

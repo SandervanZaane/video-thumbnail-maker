@@ -4,7 +4,8 @@
   const tabs = [...document.querySelectorAll('[role="tab"]')];
 
   function show() {
-    const wanted = location.hash.slice(1);
+    // Oude links naar #diashow blijven werken.
+    const wanted = location.hash.slice(1) === 'diashow' ? 'slideshow' : location.hash.slice(1);
     const active = tabs.some((tab) => tab.dataset.tab === wanted) ? wanted : tabs[0].dataset.tab;
     for (const tab of tabs) {
       const selected = tab.dataset.tab === active;

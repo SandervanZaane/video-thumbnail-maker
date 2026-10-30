@@ -3,7 +3,7 @@
 // lichte, vaste dithering, zodat stilstaande delen tussen frames niet flikkeren.
 // Frames na het eerste mogen een deelgebied zijn; pixels die niet veranderen
 // worden transparant opgeslagen, wat het bestand flink kleiner maakt.
-// Voor diashows met verschillende foto's is er encodeSlides: elk frame krijgt
+// Voor slideshows met verschillende foto's is er encodeSlides: elk frame krijgt
 // dan een eigen palet, zodat elke foto zijn eigen kleuren houdt.
 (() => {
   const TRANSPARENT = 255;
@@ -271,7 +271,7 @@
     return w.result();
   }
 
-  // Diashow: alle frames zijn volledige beelden, elk met een eigen palet.
+  // Slideshow: alle frames zijn volledige beelden, elk met een eigen palet.
   // options: { maxColors (2–256), dither (0 = uit) }; een frame kan beide
   // overschrijven met frame.colors en frame.dither.
   async function encodeSlides(width, height, frames, onProgress, { maxColors = 256, dither = DITHER_STRENGTH } = {}) {

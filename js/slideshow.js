@@ -1,4 +1,4 @@
-// Tab "Diashow": 2 tot 6 afbeeldingen worden een geanimeerde GIF die steeds
+// Tab "Slideshow": 2 tot 6 afbeeldingen worden een geanimeerde GIF die steeds
 // wisselt, eventueel met een vervagende of schuivende overgang. Bedoeld voor
 // e-mail, dus met oog voor een kleine bestandsgrootte. Alles gebeurt lokaal.
 (() => {
@@ -49,7 +49,7 @@
 
   function fileName() {
     const { width, height } = currentSize();
-    return `${sanitizeName($('#slide-filename').value) || 'Diashow_'}${width}x${height}.gif`;
+    return `${sanitizeName($('#slide-filename').value) || 'Slideshow_'}${width}x${height}.gif`;
   }
 
   function paint(ctx, item, x, width, height) {
@@ -119,7 +119,7 @@
         if (state.dragFrom === null) return;
         event.preventDefault();
         event.stopPropagation();
-        // Verplaatsen (niet wisselen): de rest schuift op, zoals in een diashow.
+        // Verplaatsen (niet wisselen): de rest schuift op, zoals in een slideshow.
         const [moved] = state.items.splice(state.dragFrom, 1);
         state.items.splice(i, 0, moved);
         state.dragFrom = null;

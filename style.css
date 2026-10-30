@@ -349,3 +349,7 @@ select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   font-size: 0.9rem;
 }
 .options.cols-3 .option, .options.cols-4 .option { padding: 8px 4px; font-size: 0.9rem; white-space: nowrap; }
+@media (max-width: 640px) {
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .tabs button { font-size: 0.85rem; white-space: nowrap; padding: 7px 4px; }
+}

@@ -2,15 +2,6 @@
 
 Webapp met vier tools voor e-mail- en webafbeeldingen. Alles draait in de browser: afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld.
 
-## Video thumbnail
-
-- Haalt de thumbnail van een video op via de link (gewone, korte, shorts- en embed-links of een kaal video-ID), of gebruikt een eigen geüploade afbeelding
-- Play-knop in vier stijlen: rood, wit, donker of eigen kleuren (cirkel en driehoek), met instelbare grootte
-- Formaten: 1280×720, 648×365 (16:9), 648×250 of een eigen formaat
-- Wordt nooit geplet: bij een afwijkende verhouding wordt bijgesneden, met een schuifje voor de uitsnede
-- Download als PNG, JPG of **geanimeerde GIF**: een rustige ring rond de play-knop, daarna een korte pauze. Het eerste frame is de rusttoestand, zodat programma's zonder animatie (zoals Outlook op Windows) een nette afbeelding tonen.
-- Eigen bestandsnaam (standaard `Video_thumbnail_`), aangevuld met de afmetingen
-
 ## Afbeeldingen bijsnijden
 
 - Uploaden door te slepen, bestanden te kiezen of te plakken (Ctrl+V / ⌘V), meerdere tegelijk
@@ -30,7 +21,7 @@ Webapp met vier tools voor e-mail- en webafbeeldingen. Alles draait in de browse
 - Per foto verslepen en zoomen; volgorde wijzigen door de voorbeelden te verslepen
 - Download als JPG of PNG (transparant altijd PNG) zodra alle vakken gevuld zijn
 
-## Diashow
+## Slideshow
 
 - 2 tot 6 afbeeldingen worden een geanimeerde GIF die steeds wisselt, voor e-mail
 - Formaat 648 × 365 of 648 × 450; per afbeelding verslepen en zoomen; volgorde wijzigen door te slepen
@@ -38,6 +29,15 @@ Webapp met vier tools voor e-mail- en webafbeeldingen. Alles draait in de browse
 - Overgang: geen, vervagen of schuiven (kort, ongeveer 0,2 s)
 - Elk beeld krijgt een eigen kleurenpalet voor betere fotokwaliteit
 - Boven 1 MB volgt een waarschuwing, met een knop "Kleiner maken" (minder tussenbeelden en kleuren)
+
+## Video thumbnail
+
+- Haalt de thumbnail van een video op via de link (gewone, korte, shorts- en embed-links of een kaal video-ID), of gebruikt een eigen geüploade afbeelding
+- Play-knop in vier stijlen: rood, wit, donker of eigen kleuren (cirkel en driehoek), met instelbare grootte
+- Formaten: 1280×720, 648×365 (16:9), 648×250 of een eigen formaat
+- Wordt nooit geplet: bij een afwijkende verhouding wordt bijgesneden, met een schuifje voor de uitsnede
+- Download als PNG, JPG of **geanimeerde GIF**: een rustige ring rond de play-knop, daarna een korte pauze. Het eerste frame is de rusttoestand, zodat programma's zonder animatie (zoals Outlook op Windows) een nette afbeelding tonen.
+- Eigen bestandsnaam (standaard `Video_thumbnail_`), aangevuld met de afmetingen
 
 ## Privacy
 
