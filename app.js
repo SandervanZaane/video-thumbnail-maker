@@ -4,7 +4,7 @@
 const ASPECT = 9 / 16;
 // Breedte × hoogte; hoogte null = automatisch (16:9).
 // Van groot naar klein (op oppervlakte), in dezelfde volgorde als in de HTML.
-const PRESETS = [[1280, 720], [648, null], [640, 360], [648, 250], [480, 270], [320, 180]];
+const PRESETS = [[1280, 720], [648, null], [648, 250], [480, 270], [320, 180]];
 const PREVIEW_WIDTH = 1280;
 // Van hoogste naar laagste kwaliteit; maxres bestaat niet voor elke video.
 const QUALITIES = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault'];
