@@ -1,4 +1,4 @@
-// YouTube Thumbnail Maker: haalt de thumbnail van een video op, tekent er een
+// Video Thumbnail Maker: haalt de thumbnail van een video op, tekent er een
 // play-knop overheen en laat je het resultaat downloaden in verschillende maten.
 
 const ASPECT = 9 / 16;
@@ -19,7 +19,7 @@ const customWidth = $('#custom-width');
 
 const state = { image: null, videoId: null };
 
-// Haalt het video-ID uit alle gangbare YouTube-linkvormen, of accepteert een kaal ID.
+// Haalt het video-ID uit alle gangbare videolinkvormen, of accepteert een kaal ID.
 function parseVideoId(input) {
   const text = input.trim();
   if (/^[\w-]{11}$/.test(text)) return text;
@@ -54,7 +54,7 @@ async function fetchThumbnail(videoId) {
   for (const quality of QUALITIES) {
     try {
       const img = await loadImage(`https://i.ytimg.com/vi/${videoId}/${quality}.jpg`);
-      // YouTube geeft een grijze placeholder van 120x90 terug als een kwaliteit ontbreekt.
+      // De bron geeft een grijze placeholder van 120x90 terug als een kwaliteit ontbreekt.
       if (img.naturalWidth > 120) return img;
     } catch {
       // probeer de volgende kwaliteit
@@ -75,7 +75,7 @@ function drawPlayButton(ctx, w, h, style, sizePct) {
 
   let triangleSize;
   let triangleColor;
-  if (style === 'youtube') {
+  if (style === 'red') {
     const bh = bw * 0.7;
     ctx.fillStyle = '#ff0000';
     ctx.beginPath();
@@ -177,7 +177,7 @@ form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const videoId = parseVideoId(urlInput.value);
   if (!videoId) {
-    setStatus('Dit lijkt geen geldige YouTube-link.', true);
+    setStatus('Dit lijkt geen geldige videolink.', true);
     return;
   }
   setStatus('Thumbnail ophalen…');

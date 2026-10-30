@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YouTube Thumbnail Maker</title>
+  <title>Video Thumbnail Maker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
     <header>
-      <h1>YouTube Thumbnail Maker</h1>
-      <p class="sub">Plak een YouTube-link, kies een play-knop en formaat, en download de afbeelding.</p>
+      <h1>Video Thumbnail Maker</h1>
+      <p class="sub">Plak een videolink, kies een play-knop en formaat, en download de afbeelding.</p>
     </header>
 
     <form id="url-form" class="card">
-      <label for="url">YouTube-link of video-ID</label>
+      <label for="url">Videolink of video-ID</label>
       <div class="row">
-        <input id="url" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" required>
+        <input id="url" type="text" placeholder="Plak hier de link naar de video" autocomplete="off" required>
         <button type="submit">Ophalen</button>
       </div>
       <p id="status" class="status" role="status"></p>
@@ -31,7 +31,7 @@
         <fieldset>
           <legend>Play-knop</legend>
           <div class="chips" id="button-style">
-            <label><input type="radio" name="style" value="youtube" checked> YouTube</label>
+            <label><input type="radio" name="style" value="red" checked> Rood</label>
             <label><input type="radio" name="style" value="circle"> Rond wit</label>
             <label><input type="radio" name="style" value="dark"> Rond donker</label>
             <label><input type="radio" name="style" value="none"> Geen</label>
