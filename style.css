@@ -114,7 +114,9 @@ legend { font-weight: 700; margin-bottom: 8px; padding: 0; }
 .slider input { flex: 1; max-width: 240px; accent-color: var(--accent); }
 .check input { accent-color: var(--accent); }
 .custom { flex-wrap: wrap; }
-.custom label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.colors { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+.colors input { width: 44px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; }
+.custom label, .colors label { display: flex; align-items: center; gap: 8px; font-weight: 400; }
 .hint, #button-size-value { color: var(--muted); }
 p.hint { margin: 8px 0 0; font-size: 0.9rem; }
 

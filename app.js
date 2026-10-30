@@ -3,7 +3,8 @@
 
 const ASPECT = 9 / 16;
 // Breedte × hoogte; hoogte null = automatisch (16:9).
-const PRESETS = [[1280, 720], [640, 360], [480, 270], [320, 180], [648, 250], [648, null]];
+// Van groot naar klein (op oppervlakte), in dezelfde volgorde als in de HTML.
+const PRESETS = [[1280, 720], [648, null], [640, 360], [648, 250], [480, 270], [320, 180]];
 const PREVIEW_WIDTH = 1280;
 // Van hoogste naar laagste kwaliteit; maxres bestaat niet voor elke video.
 const QUALITIES = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault'];
@@ -21,6 +22,9 @@ const customWidth = $('#custom-width');
 const customHeight = $('#custom-height');
 const cropWrap = $('#crop-wrap');
 const cropPos = $('#crop-pos');
+const colorWrap = $('#color-wrap');
+const colorCircle = $('#color-circle');
+const colorTriangle = $('#color-triangle');
 
 const state = { image: null, videoId: null };
 
@@ -91,7 +95,12 @@ function drawPlayButton(ctx, w, h, style, sizePct) {
     triangleColor = '#ffffff';
   } else {
     const r = bw / 2;
-    ctx.fillStyle = style === 'circle' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.65)';
+    const colors = {
+      circle: ['rgba(255, 255, 255, 0.95)', '#18181b'],
+      custom: [colorCircle.value, colorTriangle.value],
+      dark: ['rgba(0, 0, 0, 0.65)', '#ffffff'],
+    }[style];
+    ctx.fillStyle = colors[0];
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fill();
@@ -102,7 +111,7 @@ function drawPlayButton(ctx, w, h, style, sizePct) {
       ctx.stroke();
     }
     triangleSize = r * 0.75;
-    triangleColor = style === 'circle' ? '#18181b' : '#ffffff';
+    triangleColor = colors[1];
   }
 
   // Gelijkzijdige driehoek, iets naar rechts zodat hij optisch gecentreerd staat.
@@ -183,6 +192,7 @@ function currentSize() {
 function updatePreview() {
   $('#button-size-value').textContent = `${sizeSlider.value}%`;
   customWrap.hidden = selected('size') !== 'custom';
+  colorWrap.hidden = selected('style') !== 'custom';
 
   const { width, height } = currentSize();
   const ratio = height / width;

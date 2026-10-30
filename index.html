@@ -33,8 +33,13 @@
           <div class="chips" id="button-style">
             <label><input type="radio" name="style" value="red" checked> Rood</label>
             <label><input type="radio" name="style" value="circle"> Rond wit</label>
+            <label><input type="radio" name="style" value="custom"> Rond eigen kleuren</label>
             <label><input type="radio" name="style" value="dark"> Rond donker</label>
             <label><input type="radio" name="style" value="none"> Geen</label>
+          </div>
+          <div class="colors" id="color-wrap" hidden>
+            <label>Cirkel <input id="color-circle" type="color" value="#ffffff"></label>
+            <label>Driehoek <input id="color-triangle" type="color" value="#18181b"></label>
           </div>
           <label class="slider">Grootte <input id="button-size" type="range" min="8" max="40" value="20"> <span id="button-size-value">20%</span></label>
           <label class="check"><input id="darken" type="checkbox"> Afbeelding iets donkerder maken</label>
@@ -44,11 +49,11 @@
           <legend>Formaat</legend>
           <div class="chips" id="sizes">
             <label><input type="radio" name="size" value="1280x720" checked> 1280 × 720</label>
+            <label><input type="radio" name="size" value="648xauto"> 648 × automatisch</label>
             <label><input type="radio" name="size" value="640x360"> 640 × 360</label>
+            <label><input type="radio" name="size" value="648x250"> 648 × 250</label>
             <label><input type="radio" name="size" value="480x270"> 480 × 270</label>
             <label><input type="radio" name="size" value="320x180"> 320 × 180</label>
-            <label><input type="radio" name="size" value="648x250"> 648 × 250</label>
-            <label><input type="radio" name="size" value="648xauto"> 648 × automatisch</label>
             <label><input type="radio" name="size" value="custom"> Eigen formaat</label>
           </div>
           <div class="custom" id="custom-wrap" hidden>
