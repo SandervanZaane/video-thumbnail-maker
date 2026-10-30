@@ -12,6 +12,7 @@ Webapp die de thumbnail van een video ophaalt, er een play-knop op plaatst en he
 - Eigen formaat: vul een breedte in, en optioneel een hoogte (leeg = automatisch 16:9)
 - De afbeelding wordt nooit geplet: wijkt de verhouding af van 16:9, dan wordt er bijgesneden. Met een schuifje kies je welk deel zichtbaar blijft.
 - Download als PNG, JPG of WebP, los of alle vaste maten in één keer
+- Eigen bestandsnaam (standaard `Video_thumbnail_`), aangevuld met de afmetingen, bijvoorbeeld `Video_thumbnail_1280x720.png`
 
 ## Gebruik
 

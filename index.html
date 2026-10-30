@@ -65,12 +65,14 @@
         </fieldset>
 
         <fieldset>
-          <legend>Bestandstype</legend>
+          <legend>Bestand</legend>
           <div class="chips">
             <label><input type="radio" name="type" value="image/png" checked> PNG</label>
             <label><input type="radio" name="type" value="image/jpeg"> JPG</label>
             <label><input type="radio" name="type" value="image/webp"> WebP</label>
           </div>
+          <label class="filename">Bestandsnaam <input id="filename" type="text" value="Video_thumbnail_" spellcheck="false"></label>
+          <p class="hint" id="filename-info"></p>
         </fieldset>
 
         <div class="actions">

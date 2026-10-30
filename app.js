@@ -202,18 +202,27 @@ function updatePreview() {
   $('#size-info').textContent = `Resultaat: ${width} × ${height} px` +
     (cropped ? ' — afbeelding wordt bijgesneden, niet geplet' : '');
 
+  $('#filename-info').textContent = `Wordt opgeslagen als: ${fileName(width, height)}`;
+
   // Voorbeeld in dezelfde verhouding als het eindresultaat.
   if (state.image) render(canvas, PREVIEW_WIDTH, Math.round(PREVIEW_WIDTH * ratio));
 }
 
+// Eigen naam + afmetingen, zodat "alle maten" elkaar niet overschrijven.
+// Tekens die besturingssystemen niet toestaan in bestandsnamen worden weggelaten.
+function fileName(width, height) {
+  const ext = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }[selected('type')];
+  const base = $('#filename').value.replace(/[\\/:*?"<>|\x00-\x1f]/g, '').trim() || 'Video_thumbnail_';
+  return `${base}${width}x${height}.${ext}`;
+}
+
 function download({ width, height }) {
   const type = selected('type');
-  const ext = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }[type];
   const out = render(document.createElement('canvas'), width, height);
   out.toBlob((blob) => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `thumbnail-${state.videoId}-${out.width}x${out.height}.${ext}`;
+    a.download = fileName(width, height);
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }, type, 0.92);
