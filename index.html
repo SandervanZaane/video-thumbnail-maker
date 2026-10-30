@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Thumbnail Maker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>YouTube Thumbnail Maker</h1>
+      <p class="sub">Plak een YouTube-link, kies een play-knop en formaat, en download de afbeelding.</p>
+    </header>
+
+    <form id="url-form" class="card">
+      <label for="url">YouTube-link of video-ID</label>
+      <div class="row">
+        <input id="url" type="text" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" required>
+        <button type="submit">Ophalen</button>
+      </div>
+      <p id="status" class="status" role="status"></p>
+    </form>
+
+    <section id="editor" class="card" hidden>
+      <div class="preview">
+        <canvas id="canvas" width="1280" height="720"></canvas>
+      </div>
+
+      <div class="controls">
+        <fieldset>
+          <legend>Play-knop</legend>
+          <div class="chips" id="button-style">
+            <label><input type="radio" name="style" value="youtube" checked> YouTube</label>
+            <label><input type="radio" name="style" value="circle"> Rond wit</label>
+            <label><input type="radio" name="style" value="dark"> Rond donker</label>
+            <label><input type="radio" name="style" value="none"> Geen</label>
+          </div>
+          <label class="slider">Grootte <input id="button-size" type="range" min="8" max="40" value="20"> <span id="button-size-value">20%</span></label>
+          <label class="check"><input id="darken" type="checkbox"> Afbeelding iets donkerder maken</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Formaat</legend>
+          <div class="chips" id="sizes">
+            <label><input type="radio" name="size" value="1280" checked> 1280 × 720</label>
+            <label><input type="radio" name="size" value="640"> 640 × 360</label>
+            <label><input type="radio" name="size" value="480"> 480 × 270</label>
+            <label><input type="radio" name="size" value="320"> 320 × 180</label>
+            <label><input type="radio" name="size" value="custom"> Eigen breedte</label>
+          </div>
+          <label class="custom" id="custom-wrap" hidden>Breedte (px) <input id="custom-width" type="number" min="50" max="3840" value="800"> <span id="custom-height"></span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Bestandstype</legend>
+          <div class="chips">
+            <label><input type="radio" name="type" value="image/png" checked> PNG</label>
+            <label><input type="radio" name="type" value="image/jpeg"> JPG</label>
+            <label><input type="radio" name="type" value="image/webp"> WebP</label>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button id="download" type="button">Download</button>
+          <button id="download-all" type="button" class="secondary">Alle 4 maten downloaden</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
