@@ -353,3 +353,51 @@ select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   .tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
   .tabs button { font-size: 0.85rem; white-space: nowrap; padding: 7px 4px; }
 }
+
+/* Openingsanimatie (alleen actief met de klasse intro-play, zie js/intro.js) */
+.intro { display: none; }
+.intro-play .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #0b0b0d;
+  cursor: pointer;
+  animation: intro-out 0.5s ease-in 1.5s forwards;
+}
+.intro-dot, .intro-ring {
+  grid-area: 1 / 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.intro-dot {
+  background: #22c55e;
+  box-shadow: 0 0 28px rgba(34, 197, 94, 0.6);
+  transform: scale(0);
+  animation:
+    intro-dot-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards,
+    intro-dot-zoom 0.6s cubic-bezier(0.7, 0, 0.84, 0) 1.3s forwards;
+}
+.intro-ring {
+  border: 2px solid #22c55e;
+  opacity: 0;
+  animation: intro-ring 1s ease-out 0.55s;
+}
+.intro-ring.second { animation-delay: 0.85s; }
+.intro-play .topbar, .intro-play main, .intro-play .privacy {
+  animation: intro-app-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 1.45s backwards;
+}
+
+@keyframes intro-dot-in { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes intro-dot-zoom {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(70); opacity: 0; }
+}
+@keyframes intro-ring {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(3.4); opacity: 0; }
+}
+@keyframes intro-out { to { opacity: 0; visibility: hidden; } }
+@keyframes intro-app-in { from { opacity: 0; transform: scale(0.985) translateY(8px); } }
