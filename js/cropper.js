@@ -45,24 +45,8 @@
     return { width, height };
   }
 
-  // De grootst mogelijke uitsnede in de juiste verhouding, gedeeld door de zoom.
-  // De uitsnede blijft altijd binnen de afbeelding: nooit pletten, nooit randen.
   function cropRect(item, width, height) {
-    const iw = item.img.naturalWidth;
-    const ih = item.img.naturalHeight;
-    const aspect = width / height;
-    let cw = iw;
-    let ch = ih;
-    if (iw / ih > aspect) cw = ih * aspect;
-    else ch = iw / aspect;
-    cw /= item.zoom;
-    ch /= item.zoom;
-    return {
-      x: clamp(item.fx * iw - cw / 2, 0, iw - cw),
-      y: clamp(item.fy * ih - ch / 2, 0, ih - ch),
-      w: cw,
-      h: ch,
-    };
+    return window.Beeld.coverRect(item.img.naturalWidth, item.img.naturalHeight, width, height, item.zoom, item.fx, item.fy);
   }
 
   function draw(item, canvas, width, height, type) {

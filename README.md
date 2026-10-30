@@ -1,6 +1,6 @@
 # Beeldtools
 
-Webapp met twee tools voor e-mail- en webafbeeldingen. Alles draait in de browser: afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld.
+Webapp met drie tools voor e-mail- en webafbeeldingen. Alles draait in de browser: afbeeldingen worden niet geüpload, niet opgeslagen en niet gedeeld.
 
 ## Video thumbnail
 
@@ -20,6 +20,15 @@ Webapp met twee tools voor e-mail- en webafbeeldingen. Alles draait in de browse
 - JPG met instelbare kwaliteit en zichtbare bestandsgrootte, of PNG
 - Vorm **Rond** voor pasfoto's: 400×400, 300×300, 200×200, 120×120 of eigen doorsnede (max. 720), altijd als PNG met transparante achtergrond
 - Los downloaden of alles in één ZIP-bestand
+
+## Galerij
+
+- Meerdere foto's samen in één afbeelding voor e-mail (één link voor de hele galerij)
+- Indeling: 1 × 3, 1 × 4, 2 × 3 of 2 × 4; breedte 648 of 720 px; elke foto liggend 3:2
+- Ruimte tussen de foto's: 0, 4, 8 of 12 px, in wit, transparant of een eigen kleur
+- Foto's vullen de vakken op volgorde; een leeg vak aanklikken om het te vullen, later aanvullen kan altijd
+- Per foto verslepen en zoomen; volgorde wijzigen door de voorbeelden te verslepen
+- Download als JPG of PNG (transparant altijd PNG) zodra alle vakken gevuld zijn
 
 ## Privacy
 

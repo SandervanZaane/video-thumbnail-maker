@@ -17,7 +17,8 @@
       <span class="brand">Beeldtools</span>
       <nav class="tabs" role="tablist" aria-label="Tools">
         <button type="button" role="tab" id="tab-thumbnail" aria-controls="panel-thumbnail" data-tab="thumbnail">Video thumbnail</button>
-        <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Afbeeldingen bijsnijden</button>
+        <button type="button" role="tab" id="tab-crop" aria-controls="panel-crop" data-tab="bijsnijden">Bijsnijden</button>
+        <button type="button" role="tab" id="tab-gallery" aria-controls="panel-gallery" data-tab="galerij">Galerij</button>
       </nav>
     </div>
   </header>
@@ -189,6 +190,92 @@
         </aside>
       </div>
     </section>
+
+    <!-- Tab 3: galerij -->
+    <section id="panel-gallery" role="tabpanel" aria-labelledby="tab-gallery" hidden>
+      <div id="gallery-dropzone" class="card dropzone">
+        <input id="gallery-files" type="file" accept="image/*" multiple hidden>
+        <p class="drop-title">Sleep foto's voor je galerij hierheen</p>
+        <p class="hint">of <label for="gallery-files" class="link">kies bestanden</label> · ze vullen de vakken op volgorde · plakken werkt ook</p>
+      </div>
+
+      <div class="workspace">
+        <div class="stage card">
+          <canvas id="gallery-canvas" class="draggable" aria-label="Galerij; klik een foto aan en sleep om te verplaatsen"></canvas>
+          <div class="stage-bar">
+            <label class="field zoom">
+              <span class="field-head">Zoom geselecteerde foto <output id="gallery-zoom-value">100%</output></span>
+              <input id="gallery-zoom" type="range" min="100" max="400" value="100">
+            </label>
+            <button type="button" class="secondary small" id="gallery-reset">Centreren</button>
+          </div>
+          <p class="hint" id="gallery-info"></p>
+          <ul id="gallery-list" class="thumbs" aria-label="Volgorde van de foto's"></ul>
+          <p class="hint">Sleep de voorbeelden hierboven om de volgorde te wijzigen.</p>
+        </div>
+
+        <aside class="panel card">
+          <section class="group">
+            <h2>Indeling</h2>
+            <div class="options cols-2 layouts" role="radiogroup" aria-label="Indeling">
+              <label class="option"><input type="radio" name="gallery-layout" value="1x3" checked><span class="grid-icon cols-3"><i></i><i></i><i></i></span><span>1 × 3</span></label>
+              <label class="option"><input type="radio" name="gallery-layout" value="1x4"><span class="grid-icon cols-4"><i></i><i></i><i></i><i></i></span><span>1 × 4</span></label>
+              <label class="option"><input type="radio" name="gallery-layout" value="2x3"><span class="grid-icon cols-3"><i></i><i></i><i></i><i></i><i></i><i></i></span><span>2 × 3</span></label>
+              <label class="option"><input type="radio" name="gallery-layout" value="2x4"><span class="grid-icon cols-4"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>2 × 4</span></label>
+            </div>
+          </section>
+
+          <section class="group">
+            <h2>Breedte</h2>
+            <div class="options cols-2" role="radiogroup" aria-label="Breedte">
+              <label class="option"><input type="radio" name="gallery-width" value="648" checked><span>648 px</span></label>
+              <label class="option"><input type="radio" name="gallery-width" value="720"><span>720 px</span></label>
+            </div>
+            <p class="hint" id="gallery-size-info"></p>
+          </section>
+
+          <section class="group">
+            <h2>Ruimte tussen foto's</h2>
+            <div class="options cols-4" role="radiogroup" aria-label="Ruimte tussen foto's">
+              <label class="option"><input type="radio" name="gallery-gap" value="0"><span>0</span></label>
+              <label class="option"><input type="radio" name="gallery-gap" value="4"><span>4</span></label>
+              <label class="option"><input type="radio" name="gallery-gap" value="8" checked><span>8</span></label>
+              <label class="option"><input type="radio" name="gallery-gap" value="12"><span>12</span></label>
+            </div>
+            <div id="gallery-bg-wrap">
+              <div class="options cols-3 spaced" role="radiogroup" aria-label="Kleur van de ruimte">
+                <label class="option"><input type="radio" name="gallery-bg" value="white" checked><span>Wit</span></label>
+                <label class="option"><input type="radio" name="gallery-bg" value="transparent"><span>Transparant</span></label>
+                <label class="option"><input type="radio" name="gallery-bg" value="custom"><span>Kleur</span></label>
+              </div>
+              <div class="colors" id="gallery-color-wrap" hidden>
+                <label>Kleur <input id="gallery-color" type="color" value="#f4f4f5"></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="group">
+            <h2>Bestand</h2>
+            <div class="options cols-2" role="radiogroup" aria-label="Bestandstype" id="gallery-type-options">
+              <label class="option"><input type="radio" name="gallery-type" value="image/jpeg" checked><span>JPG</span></label>
+              <label class="option"><input type="radio" name="gallery-type" value="image/png"><span>PNG</span></label>
+            </div>
+            <p class="hint" id="gallery-type-hint" hidden>Transparant wordt altijd als PNG opgeslagen.</p>
+            <label class="field">
+              <span class="field-head">Bestandsnaam</span>
+              <input id="gallery-filename" type="text" value="Galerij_" spellcheck="false">
+            </label>
+            <p class="hint" id="gallery-filename-info"></p>
+          </section>
+
+          <div class="actions single">
+            <button id="gallery-download" type="button" class="primary">Download galerij</button>
+          </div>
+          <button id="gallery-clear" type="button" class="link danger">Alles wissen</button>
+          <p class="status" id="gallery-status" role="status"></p>
+        </aside>
+      </div>
+    </section>
   </main>
 
   <footer class="privacy">
@@ -201,5 +288,6 @@
   <script src="js/tabs.js"></script>
   <script src="js/thumbnail.js"></script>
   <script src="js/cropper.js"></script>
+  <script src="js/gallery.js"></script>
 </body>
 </html>

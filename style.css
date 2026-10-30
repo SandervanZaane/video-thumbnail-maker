@@ -184,7 +184,7 @@ button:disabled { opacity: 0.55; cursor: progress; }
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
-.options.cols-2 .option, .options.cols-3 .option { justify-content: center; }
+.options.cols-2 .option, .options.cols-3 .option, .options.cols-4 .option { justify-content: center; }
 .option:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
 .option input { position: absolute; opacity: 0; pointer-events: none; }
 .option span { font-weight: 500; }
@@ -298,3 +298,27 @@ button:disabled { opacity: 0.55; cursor: progress; }
   .tabs { width: 100%; }
   .tabs button { flex: 1; padding: 7px 8px; }
 }
+
+/* Galerij */
+.options.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.options.spaced { margin-top: 8px; }
+.layouts .option { flex-direction: column; gap: 6px; padding: 10px 8px 8px; }
+.grid-icon { display: grid; gap: 2px; width: 44px; }
+.grid-icon.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-icon.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-icon i { aspect-ratio: 3 / 2; border-radius: 2px; background: var(--muted); opacity: 0.45; }
+.option:has(input:checked) .grid-icon i { background: var(--accent); opacity: 0.8; }
+.actions.single { grid-template-columns: 1fr; }
+.thumbs li[draggable="true"] .thumb { cursor: grab; }
+.thumbs li.drop-target .thumb { border-color: var(--accent); border-style: dashed; }
+.thumb.empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  border-style: dashed;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+.thumb.empty:hover { border-color: var(--accent); color: var(--accent); }
+.thumbs li.outside { opacity: 0.5; }

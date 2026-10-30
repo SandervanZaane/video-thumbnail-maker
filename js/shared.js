@@ -27,6 +27,25 @@ window.Beeld = {
     return new Promise((resolve) => setTimeout(resolve, 0));
   },
 
+  // De grootst mogelijke uitsnede in verhouding w:h uit een afbeelding van
+  // iw × ih, gedeeld door de zoom, rond middelpunt (fx, fy) in 0–1. Blijft altijd
+  // binnen de afbeelding: nooit pletten, nooit lege randen.
+  coverRect(iw, ih, w, h, zoom, fx, fy) {
+    const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+    let cw = iw;
+    let ch = ih;
+    if (iw / ih > w / h) cw = (ih * w) / h;
+    else ch = (iw * h) / w;
+    cw /= zoom;
+    ch /= zoom;
+    return {
+      x: clamp(fx * iw - cw / 2, 0, iw - cw),
+      y: clamp(fy * ih - ch / 2, 0, ih - ch),
+      w: cw,
+      h: ch,
+    };
+  },
+
   extension(type) {
     return { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif' }[type];
   },
