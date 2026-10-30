@@ -244,15 +244,6 @@
 
   // --- Bestanden ---
 
-  function loadImage(url) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = url;
-    });
-  }
-
   // Vult eerst het gekozen vak (als dat er is), daarna de lege vakken op volgorde.
   async function addFiles(files, target = null) {
     const images = [...files].filter((file) => file.type.startsWith('image/'));
@@ -270,20 +261,18 @@
         skipped++;
         continue;
       }
-      const url = URL.createObjectURL(file);
       try {
-        const img = await loadImage(url);
+        const { img, url } = await window.Beeld.loadImageFile(file);
         const item = { name: file.name || `foto-${slot + 1}.png`, url, img, zoom: 1, fx: 0.5, fy: 0.5, thumb: document.createElement('canvas') };
         renderThumb(item);
         state.slots[slot] = item;
         first ??= slot;
-      } catch {
-        URL.revokeObjectURL(url);
-        failed.push(file.name);
+      } catch (err) {
+        failed.push(err.message);
       }
     }
     const notes = [];
-    if (failed.length) notes.push(`Kon niet openen: ${failed.join(', ')}.`);
+    if (failed.length) notes.push(`Kon niet openen: ${failed.join('; ')}.`);
     if (skipped) notes.push(`${skipped} foto${skipped > 1 ? "'s" : ''} niet toegevoegd: er zijn maximaal ${MAX_SLOTS} plekken.`);
     setStatus(notes.join(' '), notes.length > 0);
     if (first !== null) state.selected = first;

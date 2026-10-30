@@ -171,15 +171,6 @@
 
   // --- Bestanden ---
 
-  function loadImage(url) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = url;
-    });
-  }
-
   async function addFiles(files) {
     const images = [...files].filter((file) => file.type.startsWith('image/'));
     if (!images.length) {
@@ -189,19 +180,17 @@
     const failed = [];
     let firstNew = null;
     for (const file of images) {
-      const url = URL.createObjectURL(file);
       try {
-        const img = await loadImage(url);
+        const { img, url } = await window.Beeld.loadImageFile(file);
         const item = { id: state.nextId++, name: file.name || 'geplakte-afbeelding.png', url, img, zoom: 1, fx: 0.5, fy: 0.5, thumb: document.createElement('canvas') };
         renderThumb(item);
         state.items.push(item);
         firstNew ??= item.id;
-      } catch {
-        URL.revokeObjectURL(url);
-        failed.push(file.name);
+      } catch (err) {
+        failed.push(err.message);
       }
     }
-    setStatus(failed.length ? `Kon niet openen: ${failed.join(', ')} (bestandstype niet ondersteund door je browser).` : '', failed.length > 0);
+    setStatus(failed.length ? `Kon niet openen: ${failed.join('; ')}.` : '', failed.length > 0);
     showWorkspace();
     if (firstNew !== null) select(firstNew);
   }

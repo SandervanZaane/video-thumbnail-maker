@@ -373,15 +373,15 @@
     const file = event.target.files[0];
     event.target.value = '';
     if (!file) return;
-    if (state.uploadUrl) URL.revokeObjectURL(state.uploadUrl);
-    state.uploadUrl = URL.createObjectURL(file);
     try {
-      const img = await loadImage(state.uploadUrl);
+      const { img, url } = await window.Beeld.loadImageFile(file);
+      if (state.uploadUrl) URL.revokeObjectURL(state.uploadUrl);
+      state.uploadUrl = url;
       state.videoId = null;
       urlInput.value = '';
       showImage(img, false, `Eigen afbeelding geladen: ${file.name} (${img.naturalWidth} × ${img.naturalHeight} px).`);
-    } catch {
-      setStatus(`Kan ${file.name} niet openen.`, true);
+    } catch (err) {
+      setStatus(`Kon niet openen: ${err.message}.`, true);
     }
   });
 

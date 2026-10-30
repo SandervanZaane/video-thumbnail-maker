@@ -46,6 +46,61 @@ window.Beeld = {
     };
   },
 
+  // Opent een afbeeldingsbestand van je eigen apparaat. Lukt dat niet via een
+  // blob-URL, dan volgt een tweede poging via een data-URL. Mislukt alles, dan
+  // geeft de fout een begrijpelijke reden. Geeft { img, url } terug; url is de
+  // blob-URL die later vrijgegeven moet worden (of null).
+  async loadImageFile(file) {
+    const open = (src) => new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+    if (!file.size) throw new Error(`${file.name} is leeg (0 bytes)`);
+    let head;
+    try {
+      head = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+    } catch {
+      throw new Error(`${file.name} kan niet worden gelezen (staat het bestand misschien alleen in de cloud, zoals OneDrive of iCloud?)`);
+    }
+
+    const url = URL.createObjectURL(file);
+    try {
+      return { img: await open(url), url };
+    } catch {
+      URL.revokeObjectURL(url);
+    }
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      return { img: await open(dataUrl), url: null };
+    } catch {
+      // val door naar de foutmelding
+    }
+
+    // Kijk naar de eerste bytes om te zien wat het bestand werkelijk is.
+    const ascii = String.fromCharCode(...head);
+    const kind =
+      head[0] === 0xff && head[1] === 0xd8 ? 'JPG' :
+      ascii.startsWith('\x89PNG') ? 'PNG' :
+      ascii.startsWith('GIF8') ? 'GIF' :
+      ascii.startsWith('RIFF') && ascii.slice(8, 12) === 'WEBP' ? 'WebP' :
+      /ftyp(heic|heix|mif1|msf1|hevc)/.test(ascii) ? 'HEIC' :
+      /ftypavif/.test(ascii) ? 'AVIF' :
+      /^\s*</.test(ascii) ? 'HTML' : null;
+    if (kind === 'HEIC') throw new Error(`${file.name} is een HEIC-foto (iPhone-formaat) die je browser niet kan openen; sla hem op als JPG en probeer opnieuw`);
+    if (kind === 'HTML') throw new Error(`${file.name} is geen afbeelding maar een webpagina (misschien een mislukte download)`);
+    const ext = (file.name.split('.').pop() || '').toUpperCase().replace('JPEG', 'JPG');
+    if (kind && kind !== ext) throw new Error(`${file.name} is eigenlijk een ${kind}-bestand, en dat kan je browser niet openen`);
+    throw new Error(`${file.name} is beschadigd of onvolledig (${window.Beeld.formatBytes(file.size)})`);
+  },
+
   extension(type) {
     return { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif' }[type];
   },
