@@ -204,8 +204,10 @@
 
   // --- Instellingen ---
 
+  // Leest de keuze uit een dropdown of een groep radioknoppen.
   function selected(name) {
-    return document.querySelector(`input[name="${name}"]:checked`).value;
+    const select = document.querySelector(`select[name="${name}"]`);
+    return select ? select.value : document.querySelector(`input[name="${name}"]:checked`).value;
   }
 
   const clampPx = (value) => Math.min(3840, Math.max(50, Math.round(value)));

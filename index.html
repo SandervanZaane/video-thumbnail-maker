@@ -32,7 +32,7 @@
           <input id="url" type="text" placeholder="Plak hier de link naar de video" autocomplete="off" spellcheck="false" required>
           <button type="submit" class="primary">Ophalen</button>
         </div>
-        <p class="hint">Of <label for="thumb-upload" class="link">upload zelf een afbeelding</label> — dan wordt er niets opgehaald van buiten.</p>
+        <p class="hint">Of <label for="thumb-upload" class="link">upload zelf een afbeelding</label></p>
         <input id="thumb-upload" type="file" accept="image/*" hidden>
         <p id="status" class="status" role="status"></p>
       </form>
@@ -65,12 +65,12 @@
 
           <section class="group">
             <h2>Formaat</h2>
-            <div class="options" role="radiogroup" aria-label="Formaat">
-              <label class="option"><input type="radio" name="size" value="1280x720" checked><span>1280 × 720<small>Groot, 16:9</small></span></label>
-              <label class="option"><input type="radio" name="size" value="648xauto"><span>648 × 365<small>E-mailbreedte, 16:9</small></span></label>
-              <label class="option"><input type="radio" name="size" value="648x250"><span>648 × 250<small>E-mailbanner</small></span></label>
-              <label class="option"><input type="radio" name="size" value="custom"><span>Eigen formaat</span></label>
-            </div>
+            <select name="size" aria-label="Formaat">
+              <option value="1280x720" selected>1280 × 720 — Groot, 16:9</option>
+              <option value="648xauto">648 × 365 — E-mailbreedte, 16:9</option>
+              <option value="648x250">648 × 250 — E-mailbanner</option>
+              <option value="custom">Eigen formaat</option>
+            </select>
             <div class="inline-fields" id="custom-wrap" hidden>
               <label>Breedte <input id="custom-width" type="number" min="50" max="3840" value="800"></label>
               <label>Hoogte <input id="custom-height" type="number" min="50" max="3840" placeholder="auto"></label>
@@ -138,13 +138,13 @@
 
           <section class="group" id="crop-round-sizes" hidden>
             <h2>Formaat</h2>
-            <div class="options" role="radiogroup" aria-label="Formaat rond">
-              <label class="option"><input type="radio" name="crop-round-size" value="400"><span>400 × 400<small>Groot</small></span></label>
-              <label class="option"><input type="radio" name="crop-round-size" value="300"><span>300 × 300<small>Middel</small></span></label>
-              <label class="option"><input type="radio" name="crop-round-size" value="200" checked><span>200 × 200<small>Pasfoto in e-mail</small></span></label>
-              <label class="option"><input type="radio" name="crop-round-size" value="120"><span>120 × 120<small>Klein, bijvoorbeeld bij een quote</small></span></label>
-              <label class="option"><input type="radio" name="crop-round-size" value="custom"><span>Eigen formaat<small>Max. 720</small></span></label>
-            </div>
+            <select name="crop-round-size" aria-label="Formaat rond">
+              <option value="400">400 × 400 — Groot</option>
+              <option value="300">300 × 300 — Middel</option>
+              <option value="200" selected>200 × 200 — Pasfoto in e-mail</option>
+              <option value="120">120 × 120 — Klein, bijvoorbeeld bij een quote</option>
+              <option value="custom">Eigen formaat — Max. 720</option>
+            </select>
             <div class="inline-fields" id="crop-round-custom-wrap" hidden>
               <label>Doorsnede (px) <input id="crop-round-custom" type="number" min="50" max="720" value="250"></label>
             </div>
@@ -153,15 +153,15 @@
 
           <section class="group" id="crop-rect-sizes">
             <h2>Formaat</h2>
-            <div class="options" role="radiogroup" aria-label="Formaat">
-              <label class="option"><input type="radio" name="crop-size" value="720x405" checked><span>720 × 405<small>Breed, 16:9</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="720x300"><span>720 × 300<small>Header</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="648x365"><span>648 × 365<small>E-mailbreedte, 16:9</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="648x250"><span>648 × 250<small>E-mailbanner</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="648x648"><span>648 × 648<small>Vierkant</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="324x324"><span>324 × 324<small>Halve kolom, vierkant</small></span></label>
-              <label class="option"><input type="radio" name="crop-size" value="custom"><span>Eigen formaat<small>Max. 720 breed</small></span></label>
-            </div>
+            <select name="crop-size" aria-label="Formaat">
+              <option value="720x405" selected>720 × 405 — Breed, 16:9</option>
+              <option value="720x300">720 × 300 — Header</option>
+              <option value="648x365">648 × 365 — E-mailbreedte, 16:9</option>
+              <option value="648x250">648 × 250 — E-mailbanner</option>
+              <option value="648x648">648 × 648 — Vierkant</option>
+              <option value="324x324">324 × 324 — Halve kolom, vierkant</option>
+              <option value="custom">Eigen formaat — Max. 720 breed</option>
+            </select>
             <div class="inline-fields" id="crop-custom-wrap" hidden>
               <label>Breedte <input id="crop-custom-width" type="number" min="50" max="720" value="648"></label>
               <label>Hoogte <input id="crop-custom-height" type="number" min="50" max="2000" value="400"></label>

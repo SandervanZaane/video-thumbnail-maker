@@ -22,7 +22,11 @@
   const state = { items: [], current: null, nextId: 1, sizeTimer: null };
 
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-  const selected = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
+  // Leest de keuze uit een dropdown of een groep radioknoppen.
+  const selected = (name) => {
+    const select = document.querySelector(`select[name="${name}"]`);
+    return select ? select.value : document.querySelector(`input[name="${name}"]:checked`).value;
+  };
   const currentItem = () => state.items.find((item) => item.id === state.current);
   const isRound = () => selected('crop-shape') === 'round';
   // Rond heeft een transparante achtergrond nodig, dus altijd PNG.
@@ -342,7 +346,7 @@
   });
 
   for (const id of ['#crop-custom-width', '#crop-custom-height', '#crop-round-custom', '#crop-quality']) $(id).addEventListener('input', updateSettings);
-  document.querySelectorAll('input[name="crop-shape"], input[name="crop-size"], input[name="crop-round-size"], input[name="crop-type"]').forEach((input) => input.addEventListener('change', updateSettings));
+  document.querySelectorAll('[name="crop-shape"], [name="crop-size"], [name="crop-round-size"], [name="crop-type"]').forEach((input) => input.addEventListener('change', updateSettings));
   $('#crop-download').addEventListener('click', () => withBusy(downloadCurrent));
   $('#crop-download-all').addEventListener('click', () => withBusy(downloadZip));
   $('#crop-clear').addEventListener('click', clearAll);
