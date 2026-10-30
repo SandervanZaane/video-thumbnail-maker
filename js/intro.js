@@ -18,7 +18,7 @@
   window.addEventListener('DOMContentLoaded', () => {
     const intro = document.getElementById('intro');
     intro.addEventListener('animationend', (event) => {
-      if (event.animationName === 'intro-out') end();
+      if (event.animationName === 'intro-done') end();
     });
     intro.addEventListener('pointerdown', end);
     window.addEventListener('keydown', end, { once: true });
